@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="CookBookApp.Views.SignUpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CookBookApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="700"
+             >
+    <Border Background="#6495ED">
+        <Grid>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <StackPanel 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center">
+
+                    <Border
+                        Background="White"
+                        CornerRadius="10"
+                        Padding="15 50 15 15"
+                        Width="330"                      
+                        Margin="50 50 50 0"
+                        >
+                        <StackPanel>
+                            <Label Content="Sign Up" FontSize="35" FontWeight="DemiBold" Foreground="#6495ED" HorizontalContentAlignment="Center"/>
+
+                            <!--Email-->
+                            <TextBox Style="{StaticResource Placeholder}" Tag="Email" Text="{Binding Login.EmailAdress}"/>
+
+                            <!--UserName-->
+                            <TextBox Style="{StaticResource Placeholder}" Tag="Username" Text="{Binding Login.UserName}"/>
+                            
+                            <!--Password-->
+                            <TextBox Style="{StaticResource Placeholder}" Tag="Password" Text="{Binding Password}"/>
+
+                            <!--Submit Button-->
+                            <Button Style="{StaticResource OrangeButton}" Content="Submit" Width="150" FontWeight="Light" Command="{Binding SignUpCommand}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  />
+                        </StackPanel>
+                    </Border>
+
+                    <!--Log in Button-->
+                    <Button Command="{Binding LogInCommand}" Style="{StaticResource TextButton}" Content="I already have an account" HorizontalAlignment="Center"/>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="CookBookApp.Views.SearchResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CookBookApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="900"
+             x:Name="SRV">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+            <!--Search TextBox-->
+            <TextBox Grid.Column="0" Grid.Row="0" Margin="10" Text="{Binding SearchKeyword}"/>
+                
+                <!--Search Button-->
+                <Button Grid.Column="1" Grid.Row="0" Content="Search" Command="{Binding SearchRecipeCommand}" Margin="10" Width="80" HorizontalAlignment="Left"/>
+
+                <!--Back To Main Page Button-->
+                <Button Grid.Column="2" Grid.Row="0" Margin="100 10 100 10" Content="Back To Main Page" Command="{Binding BackToMainPageCommand}"/>
+                
+            </Grid>
+            <!--Results-->
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Path = SearchedRecipes}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Path=Name}" Command="{Binding ShowRecipeCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.LoggedAccount}" Style="{StaticResource SearchResultsButton}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

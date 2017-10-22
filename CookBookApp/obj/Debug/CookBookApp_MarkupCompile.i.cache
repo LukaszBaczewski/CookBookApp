@@ -1,0 +1,20 @@
+﻿CookBookApp
+
+
+winexe
+C#
+.cs
+C:\Users\Bozena\documents\visual studio 2015\Projects\CookBookApp\CookBookApp\obj\Debug\
+CookBookApp
+none
+false
+DEBUG;TRACE
+C:\Users\Bozena\documents\visual studio 2015\Projects\CookBookApp\CookBookApp\App.xaml
+14-1050869690
+2-1779647843
+552065280774
+77-966974436
+Styles\Texts.xaml;Views\DisplayLoggedUserRecipeView.xaml;Views\DisplayRecipeView.xaml;Views\EditRecipeView.xaml;Views\LoggedUserView.xaml;Views\LogInView.xaml;Styles\Buttons.xaml;MainWindow.xaml;Views\CreateNewRecipeView.xaml;Views\MainView.xaml;Views\MyRecipesView.xaml;Views\NotLoggedView.xaml;Views\SearchResultsView.xaml;Views\SignUpView.xaml;
+
+True
+
