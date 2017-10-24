@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Bozena\Source\Repos\CookBookApp\CookBookApp\obj\Debug\
+C:\Users\Bozena\Source\Repos\CookBookApp\CookBookApp\obj\Release\
 CookBookApp
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\Bozena\Source\Repos\CookBookApp\CookBookApp\App.xaml
 14-1050869690
 2-1779647843
-552065280774
-771336709598
+51-1423940777
+771272594891
 Styles\Texts.xaml;Views\DisplayLoggedUserRecipeView.xaml;Views\DisplayRecipeView.xaml;Views\EditRecipeView.xaml;Views\LoggedUserView.xaml;Views\LogInView.xaml;Styles\Buttons.xaml;MainWindow.xaml;Views\CreateNewRecipeView.xaml;Views\MainView.xaml;Views\MyRecipesView.xaml;Views\NotLoggedView.xaml;Views\SearchResultsView.xaml;Views\SignUpView.xaml;
 
 True
