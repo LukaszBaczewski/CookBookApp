@@ -1,5 +1,6 @@
 ﻿using CookBookApp.Commands;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -80,6 +81,7 @@ namespace CookBookApp.ViewModels
         }
         #endregion
 
+        #region Recipe Ingredients and Difficulty Level Get methods
         public void GetRecipeIngredients()
         {
             using (var context = new RecipeDBEntities1())
@@ -100,6 +102,8 @@ namespace CookBookApp.ViewModels
                 DifficultyLvl = $"Difficulty: {DiffLvl.Name}";
             }
         }
+        #endregion
+
         #region Back To Main Page Commmand
         public ICommand BackToMainPageCommand { get { return new RelayCommand(() => ExecuteBackToMainPageCommand()); } }
 
@@ -117,6 +121,39 @@ namespace CookBookApp.ViewModels
         public void ExecuteEditRecipeCommand()
         {
             _locator.Main.CurrentViewModel = new EditRecipeViewModel(LoggedAccount, Recipe);
+        }
+        #endregion
+
+        #region Delete Recipe Command
+
+        public ICommand DeleteRecipeCommand { get { return new RelayCommand(() => ExecuteDeleteRecipeCommand()); } }
+
+        public void ExecuteDeleteRecipeCommand()
+        {
+            DeleteRecipeIngredients();
+
+            DeleteRecipe();
+
+            ExecuteBackToMainPageCommand();
+        }
+        public void DeleteRecipeIngredients()
+        {
+            using (var context = new RecipeDBEntities1())
+            {
+                foreach (var recIng in RecipeIngredientsCollection)
+                    context.RecipeIngredients.Attach(recIng);
+                context.RecipeIngredients.RemoveRange(RecipeIngredientsCollection);
+            }
+        }
+
+        public void DeleteRecipe()
+        {
+            using (var context = new RecipeDBEntities1())
+            {
+                context.Recipes.Attach(Recipe);
+                context.Recipes.Remove(Recipe);
+                context.SaveChanges();
+            }
         }
         #endregion
     }

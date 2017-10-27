@@ -1,7 +1,4 @@
 ﻿
-
-using System;
-
 namespace CookBookApp.ViewModels
 {
     public class NewIngredientViewModel : ViewModelBase

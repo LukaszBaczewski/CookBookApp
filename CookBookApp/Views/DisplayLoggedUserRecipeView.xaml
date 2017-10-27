@@ -13,6 +13,8 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
@@ -20,7 +22,9 @@
 
                     <!--Recipe Name-->
                     <Label Grid.Column="0" Grid.Row="0" Content="{Binding Recipe.Name}" FontSize="16" FontWeight="Bold"/>
-                    <Button Grid.Column="1" Grid.Row="0" Content="Edit Recipe" Command="{Binding EditRecipeCommand}"/>
+                    <Button Grid.Column="2" Grid.Row="0" Width="80" Height="25" Content="Edit Recipe" Command="{Binding EditRecipeCommand}" Style="{StaticResource SearchResultsButton}"/>
+                    <Button Grid.Column="1" Grid.Row="0" Width="130" Height="25" Content="Back To Main Page" Command="{Binding BackToMainPageCommand}" Style="{StaticResource SearchResultsButton}"/>
+                    <Button Grid.Column="3" Grid.Row="0" Width="100" Height="25" Content="Delete Recipe" Command="{Binding DeleteRecipeCommand}" Style="{StaticResource SearchResultsButton}"/>
                 </Grid>
 
                 <Grid>
@@ -61,8 +65,6 @@
                     <TextBlock Margin="5 0 0 0" Text="{Binding Recipe.Instruction}" TextWrapping="Wrap" Width="600" HorizontalAlignment="Left"/>
                     <TextBlock Margin="5" Text="{Binding Recipe.AdditionalNotes}"/>
                 </StackPanel>
-
-                <Button  Content="Back to Main page Command" Command="{Binding BackToMainPageCommand}"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

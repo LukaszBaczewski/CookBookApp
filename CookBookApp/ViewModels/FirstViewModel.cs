@@ -182,7 +182,7 @@ namespace CookBookApp.ViewModels
             if (SearchKeyword == "")
                 return;
             SearchRecipes();
-            _locator.Main.CurrentViewModel = new SearchResultsViewModel(Results, LoggedAccount);
+            _locator.Main.CurrentViewModel = new SearchResultsViewModel(Results, LoggedAccount, SearchKeyword);
         }
 
         public void SearchRecipes()

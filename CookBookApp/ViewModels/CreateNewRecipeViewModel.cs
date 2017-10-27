@@ -353,9 +353,9 @@ namespace CookBookApp.ViewModels
             var FilledIngredients = NewRecipe.RecipeIngredients
                  .Where(ingredient => (!string.IsNullOrEmpty(ingredient.Name) && !string.IsNullOrEmpty(ingredient.Measure) && !string.IsNullOrEmpty(ingredient.Quantity)));
             ObservableCollection<RecipeIngredient> FilledRecipeIngredients = new ObservableCollection<RecipeIngredient>(FilledIngredients);
-            NewRecipe.RecipeIngredients = FilledRecipeIngredients;
-                
+            NewRecipe.RecipeIngredients = FilledRecipeIngredients;               
         }
+
         public bool CanExecuteSaveRecipeCommand()
         {
             return (PropertiesFilled());

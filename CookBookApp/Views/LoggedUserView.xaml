@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CookBookApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="90" d:DesignWidth="900">
     <Grid Margin="0,-4,0,4">
@@ -20,10 +19,8 @@
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" Content="Temporary app name" FontSize="15" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <Button Grid.Column="1" Grid.Row="0" Content="My Recipes" Command="{Binding MyRecipesCommand}"/>
-            <Button Grid.Column="2" Grid.Row="0" Content="Grocery List"/>
-            <Button Grid.Column="3" Grid.Row="0" Content="Planner"/>
-        <Label Grid.Column="4" Grid.Row="0" Content="{Binding Name, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, Mode=TwoWay}" FontSize="20"/>
-        <Button Grid.Column="6" Grid.Row="0" Content="Log Out" Command="{Binding LogOutCommand}"/>
+        <Button Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Content="My Recipes" Margin="40 40 40 30" Style="{StaticResource SearchResultsButton}" Command="{Binding MyRecipesCommand}"/>
+        <Label Grid.Column="4" Grid.Row="0" Content="{Binding Name}" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Button Grid.Column="5" Grid.Row="0" Grid.ColumnSpan="2" Content="Log Out" Margin="40 40 40 30" Style="{StaticResource SearchResultsButton}" Command="{Binding LogOutCommand}"/>
         </Grid>
 </UserControl>

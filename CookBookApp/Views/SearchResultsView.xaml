@@ -31,6 +31,7 @@
             </Grid>
             <!--Results-->
             <StackPanel>
+                <Label HorizontalContentAlignment="Center" FontSize="20" Content="{Binding NoMatches}"/>
                 <ItemsControl ItemsSource="{Binding Path = SearchedRecipes}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

@@ -119,9 +119,6 @@ namespace CookBookApp.ViewModels
                 context.SaveChanges();
             }
 
-            //var account = new Account();
-            //account.ID = Account.ID;
-            //account.Name = Account.Name;
             Messenger.Default.Send<Account>(Account);
             OnRequestClose(this, new EventArgs());
         }

@@ -1,6 +1,7 @@
 ﻿using CookBookApp.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace CookBookApp.ViewModels
@@ -38,14 +39,35 @@ namespace CookBookApp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private string _noMatches;
+        public string NoMatches
+        {
+            get
+            {
+                return _noMatches;
+            }
+            set
+            {
+                _noMatches = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region Constructor
-        public SearchResultsViewModel(ObservableCollection<Recipe> sr, Account account)
+        public SearchResultsViewModel(ObservableCollection<Recipe> sr, Account account, string searchWord)
         {
             SearchedRecipes = new ObservableCollection<Recipe>(sr);
+            NoMatches = (!SearchedRecipes.Any()) ? $"Your search - {searchWord} - did not match any recipes" : "";
             _locator = new ViewModelLocator();
-            LoggedAccount = account;
+  
+             if (account.Name != null)
+            {
+                LoggedAccount = new Account();
+                LoggedAccount = account;
+            }
+
         }
         #endregion
 
@@ -54,7 +76,10 @@ namespace CookBookApp.ViewModels
 
         public void ExecuteBackToMainPage()
         {
-            _locator.Main.CurrentViewModel = new FirstViewModel(LoggedAccount);
+            if (LoggedAccount != null)
+                _locator.Main.CurrentViewModel = new FirstViewModel(LoggedAccount);
+            else
+                _locator.Main.CurrentViewModel = new FirstViewModel();
         }
         #endregion
 
@@ -82,7 +107,7 @@ namespace CookBookApp.ViewModels
                 return;
             ExecuteSearchQuery();
 
-            //_locator.Main.CurrentViewModel = new SearchResultsViewModel(Results, LoggedAccount);
+            NoMatches = (!SearchedRecipes.Any()) ? $"Your search - {SearchKeyword} - did not match any recipes" : "";
         }
 
         public void ExecuteSearchQuery()

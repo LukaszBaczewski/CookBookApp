@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" Content="Temporary app name" FontSize="15" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <Label Grid.Column="4" Grid.Row="0" Content="{Binding Name, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, Mode=TwoWay}" FontSize="20"/>
-        <Button Grid.Column="5" Grid.Row="0" Content="Sign Up" Command="{Binding SignUpCommand}"/>
-        <Button Grid.Column="6" Grid.Row="0" Content="Log In" Command="{Binding LogInCommand}"/>
+        <Button Grid.Column="5" Grid.Row="0" Margin="20 40 20 30" Content="Sign Up" Command="{Binding SignUpCommand}" Style="{StaticResource SearchResultsButton}"/>
+        <Button Grid.Column="6" Grid.Row="0" Margin="20 40 20 30" Content="Log In" Command="{Binding LogInCommand}" Style="{StaticResource SearchResultsButton}"/>
     </Grid>
 </UserControl>

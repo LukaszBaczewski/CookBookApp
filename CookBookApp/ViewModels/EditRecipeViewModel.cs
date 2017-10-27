@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using CookBookApp.Commands;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace CookBookApp.ViewModels
 {
     public class EditRecipeViewModel : ViewModelBase
     {
-        //Changes Updated
 
         #region Properties
 
@@ -67,14 +68,21 @@ namespace CookBookApp.ViewModels
         }
         #endregion
 
+        #region Fields
+
         public ViewModelLocator _locator;
+        public ObservableCollection<RecipeIngredient> NewRecipeIngredients;
+
+        #endregion
+
+        #region Constructor
 
         public EditRecipeViewModel(Account acc, Recipe recipe)
         {
-            FillDifficultyLevels();
             EditRecipe = new Recipe();
             EditRecipe = recipe;
-            GetDifficultyLevel();
+
+            NewRecipeIngredients = new ObservableCollection<RecipeIngredient>();
 
             LoggedAccount = new Account();
             LoggedAccount = acc;
@@ -82,10 +90,19 @@ namespace CookBookApp.ViewModels
             _locator = new ViewModelLocator();
 
             FillCategories();
-
+            GetCategory();
+            FillSubCategory();
+            GetSubCategory();
+            
+            FillDifficultyLevels();
+            GetDifficultyLevel();
             GetRecipeIngredients();
             GetRecipeIngredientsViewModels();
         }
+
+        #endregion
+
+        #region RecipeIngredients Get methods
 
         public void GetRecipeIngredientsViewModels()
         {
@@ -108,10 +125,35 @@ namespace CookBookApp.ViewModels
                 RecipeIngredients = new ObservableCollection<RecipeIngredient>(RecipeIngs);
             }
         }
-        #region Categories and SubCategories
 
-        private Category _selectedCategory;
-        public Category SelectedCategory
+        #endregion
+
+        #region Categories and SubCategories properties, fill and get methods
+
+        public void GetCategory()
+        {
+            using (var context = new RecipeDBEntities1())
+            {
+                var Cat = (from c in context.Categories
+                           where c.ID == EditRecipe.CategoryID
+                           select c).FirstOrDefault();
+                SelectedCategory = Cat.ID;
+            }
+        }
+
+        public void GetSubCategory()
+        {
+            using ( var context = new RecipeDBEntities1())
+            {
+                var subCat = (from s in context.SubCategories
+                              where s.ID == EditRecipe.SubCategoryID
+                              select s).FirstOrDefault();
+                SelectedSubCategory = subCat.ID;
+            }
+        }
+
+        private int _selectedCategory;
+        public int SelectedCategory
         {
             get
             {
@@ -120,13 +162,13 @@ namespace CookBookApp.ViewModels
             set
             {
                 _selectedCategory = value;
-                EditRecipe.CategoryID = _selectedCategory.ID;
+                EditRecipe.CategoryID = _selectedCategory;
                 OnPropertyChanged();
                 FillSubCategory();
             }
         }
-        private SubCategory _selectedSubCategory;
-        public SubCategory SelectedSubCategory
+        private int _selectedSubCategory;
+        public int SelectedSubCategory
         {
             get
             {
@@ -135,7 +177,7 @@ namespace CookBookApp.ViewModels
             set
             {
                 _selectedSubCategory = value;
-                EditRecipe.SubCategoryID = _selectedSubCategory.ID;
+                EditRecipe.SubCategoryID = _selectedSubCategory;
                 OnPropertyChanged();
             }
         }
@@ -150,12 +192,11 @@ namespace CookBookApp.ViewModels
         }
         private void FillSubCategory()
         {
-            Category category = SelectedCategory;
             using (var context = new RecipeDBEntities1())
             {
                 var q = (from SubCategory in context.SubCategories
                          orderby SubCategory.ID
-                         where SubCategory.CategoryID == category.ID
+                         where SubCategory.CategoryID == SelectedCategory
                          select SubCategory).ToList();
                 SubCategories = q;
             }
@@ -237,6 +278,143 @@ namespace CookBookApp.ViewModels
                          select d).ToList();
                 DifficultyLvls = q;
             }
+        }
+        #endregion
+
+        #region Add New Ingredient Command
+        public ICommand AddNewIngredientCommand { get { return new RelayCommand(() => ExecuteAddIngredient(), CanExecuteAddIngredient); } }
+
+        private void ExecuteAddIngredient()
+        {
+            AddIngredient();
+        }
+
+        private void AddIngredient()
+        {
+            RecipeIngredient NewRecipeIngredient = new RecipeIngredient();
+
+            NewRecipeIngredients.Add(NewRecipeIngredient);
+            var NewIngredientVM = new NewIngredientViewModel(NewRecipeIngredient);
+            RecipeIngredientsViewModels.Add(NewIngredientVM);
+        }
+        
+        private bool CanExecuteAddIngredient()
+        {
+            if (EditRecipe != null)
+                return AreIngredientsFilled();
+            return false;
+        }
+
+        private bool AreIngredientsFilled()
+        {
+            if (RecipeIngredients != null)
+            {
+                IEnumerable<RecipeIngredient> EmptyIngredients = RecipeIngredients
+            .Where(ingredient => (string.IsNullOrEmpty(ingredient.Name) || ((ingredient.Quantity == null)) || (string.IsNullOrEmpty(ingredient.Measure))));
+                if (EmptyIngredients.Count() > 10)
+                    return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Save Changes Command
+
+        public ICommand SaveChangesCommand { get { return new RelayCommand(() => ExecuteSaveChangesCommand()); } }
+
+        public void ExecuteSaveChangesCommand()
+        {
+            DisposeEmptyRecipeIngredients();
+
+            FilterAndAddNewIngredients();
+
+            SaveChanges();
+
+            ExecuteBackToMainPage();
+        }
+
+        public void FilterAndAddNewIngredients()
+        {
+            using (var context = new RecipeDBEntities1())
+            {
+
+                foreach (RecipeIngredient recipeIng in RecipeIngredients)
+                {
+
+                    var existingIng = context.Ingredients
+                            .Where(ingredient => ingredient.Name == recipeIng.Name)
+                            .OrderByDescending(o => o.ID)
+                            .FirstOrDefault();
+                    if (existingIng != null)
+                    {
+                        recipeIng.IngredientID = existingIng.ID;
+                    }
+                    else
+                    {
+                        Ingredient newIngredient = new Ingredient();
+                        newIngredient.Name = recipeIng.Name;
+                        context.Ingredients.Add(newIngredient);
+                        context.SaveChanges();
+                        recipeIng.IngredientID = newIngredient.ID;
+                    }
+
+                    context.SaveChanges();
+                }
+
+                foreach (RecipeIngredient recipeIng in NewRecipeIngredients)
+                {
+
+                    var existingIng = context.Ingredients
+                            .Where(ingredient => ingredient.Name == recipeIng.Name)
+                            .OrderByDescending(o => o.ID)
+                            .FirstOrDefault();
+                    if (existingIng != null)
+                    {
+                        recipeIng.IngredientID = existingIng.ID;
+                    }
+                    else
+                    {
+                        Ingredient newIngredient = new Ingredient();
+                        newIngredient.Name = recipeIng.Name;
+                        context.Ingredients.Add(newIngredient);
+                        context.SaveChanges();
+                        recipeIng.IngredientID = newIngredient.ID;
+                    }
+
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public void DisposeEmptyRecipeIngredients()
+        {
+            var FilledIngredients = RecipeIngredients
+                 .Where(ingredient => (!string.IsNullOrEmpty(ingredient.Name) && !string.IsNullOrEmpty(ingredient.Measure) && !string.IsNullOrEmpty(ingredient.Quantity)));
+            ObservableCollection<RecipeIngredient> FilledRecipeIngredients = new ObservableCollection<RecipeIngredient>(FilledIngredients);
+            RecipeIngredients = FilledRecipeIngredients;
+        }
+
+        public void SaveChanges()
+        {
+            using (var context = new RecipeDBEntities1())
+            {             
+                foreach (var ing in RecipeIngredients)
+                    context.Entry(ing).State = System.Data.Entity.EntityState.Modified;
+                context.Entry(EditRecipe).State = System.Data.Entity.EntityState.Modified;
+
+                foreach (var recIng in NewRecipeIngredients)
+                    EditRecipe.RecipeIngredients.Add(recIng);
+                context.SaveChanges();
+            }
+        }
+        #endregion
+
+        #region Back To Main Page Command
+        public ICommand BackToMainPageCommand { get { return new RelayCommand(() => ExecuteBackToMainPage()); } }
+
+        public void ExecuteBackToMainPage()
+        {
+            _locator.Main.CurrentViewModel = new FirstViewModel(LoggedAccount);
         }
         #endregion
     }
